@@ -1,5 +1,8 @@
-import 'package:catholic_app/Screens/biblia_screen.dart';
+import 'package:catholic_app/Screens/bible_screen.dart';
+import 'package:catholic_app/Screens/book_screen.dart';
+import 'package:catholic_app/Screens/chapter_screen.dart';
 import 'package:catholic_app/Screens/home_page_screen.dart';
+import 'package:catholic_app/Screens/verse_reader_screen.dart';
 import 'package:catholic_app/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +22,10 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         AppRoutes.HOMEPAGE: (ctx) => HomePageScreen(),
-        AppRoutes.BIBLIA: (ctx) => BibliaScreen(),
+        AppRoutes.BIBLIA: (ctx) => BibleScreen(),
+        AppRoutes.BOOK: (ctx) => BookScreen(),
+        AppRoutes.CHAPTER: (ctx) => ChapterScreen(),
+        AppRoutes.VERSE_READER: (ctx) => VerseReaderScreen(),
       },
     );
   }
