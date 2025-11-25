@@ -3,16 +3,23 @@ import 'package:catholic_app/services/models/biblia_service_model.dart';
 import 'package:catholic_app/services/models/versiculo_service_model.dart';
 
 class BibliaRepository {
-  BibliaRepository({required BibliaJsonService bibliaJsonService}) : _bibliaJsonService = bibliaJsonService;
+  BibliaRepository({required BibliaJsonService bibliaJsonService}) : _bibliaJsonService = bibliaJsonService{
+    loadBiblia();
+  }
 
+  Biblia? biblia;
   final BibliaJsonService _bibliaJsonService;
 
+  void loadBiblia() async {
+    biblia = await _bibliaJsonService.loadBiblia();
+  }
+
   Future<List<String>> getBooksNames() async {
-    Biblia biblia = await _bibliaJsonService.loadBiblia();
+    biblia ??= await _bibliaJsonService.loadBiblia();
 
     List<String> booksNames = [];
 
-    for (var book in biblia.livro) {
+    for (var book in biblia!.livro) {
       booksNames.add(book.nomeLivro);
     }
 
@@ -20,10 +27,10 @@ class BibliaRepository {
   }
 
   Future<List<int>> getChapters(String bookName) async {
-    Biblia biblia = await _bibliaJsonService.loadBiblia();
+    //Biblia biblia = await _bibliaJsonService.loadBiblia();
     List<int> chapters = [];
 
-    for (var book in biblia.livro) {
+    for (var book in biblia!.livro) {
       if (book.nomeLivro == bookName) {
         for (var chapter in book.capitulo) {
           chapters.add(chapter.numeroCapitulo);
@@ -37,10 +44,10 @@ class BibliaRepository {
   }
 
   Future<List<int>> getVerses(String bookName, int chpaterNumber) async {
-    Biblia biblia = await _bibliaJsonService.loadBiblia();
+    //Biblia biblia = await _bibliaJsonService.loadBiblia();
     List<int> verses = [];
 
-    for (var book in biblia.livro) {
+    for (var book in biblia!.livro) {
       if (book.nomeLivro == bookName) {
         for (var chapter in book.capitulo) {
           if (chapter.numeroCapitulo == chpaterNumber) {
@@ -58,10 +65,10 @@ class BibliaRepository {
   }
 
   Future<List<Versiculo>> getVersesText(String bookName, int chapterNumber) async {
-    Biblia biblia = await _bibliaJsonService.loadBiblia();
+    //Biblia biblia = await _bibliaJsonService.loadBiblia();
     List<Versiculo> verses = [];
 
-    for (var book in biblia.livro) {
+    for (var book in biblia!.livro) {
       if (book.nomeLivro == bookName) {
         for (var chapter in book.capitulo) {
           if (chapter.numeroCapitulo == chapterNumber) {

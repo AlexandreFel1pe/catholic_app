@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 class BibliaJsonService {
   Future<Biblia> loadBiblia() async {
     final String response = await rootBundle.loadString('assets/biblia.json');
-    final data = await json.decode(response);
+    final data =  json.decode(response);
 
     return Biblia.fromJson(data);
   }

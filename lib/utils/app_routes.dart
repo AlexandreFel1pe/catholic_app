@@ -4,4 +4,5 @@ class AppRoutes {
   static final BOOK = '/book';
   static final CHAPTER = '/chapter';
   static final VERSE_READER = '/verse-reader';
+  static final ROSARY = '/rosary';
 }

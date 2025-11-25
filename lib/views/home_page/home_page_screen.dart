@@ -25,13 +25,13 @@ class HomePageScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-        
+                Navigator.of(context).pushNamed(AppRoutes.ROSARY);
               }, 
               child: Text('Terço'),
             ),
             ElevatedButton(
               onPressed: () {
-        
+                
               }, 
               child: Text('Liturgia Diária'),
             ),
