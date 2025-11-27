@@ -3,7 +3,7 @@ import 'package:catholic_app/views/widgets/expansion_card.dart';
 import 'package:flutter/material.dart';
 
 class RosaryScreen extends StatefulWidget {
-  RosaryScreen({super.key});
+  const RosaryScreen({super.key});
 
   @override
   State<RosaryScreen> createState() => _RosaryScreenState();
@@ -11,8 +11,6 @@ class RosaryScreen extends StatefulWidget {
 
 class _RosaryScreenState extends State<RosaryScreen> {
   final dadosOracoes = DADOS_ORACOES;
-
-  bool myIsExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,24 +21,46 @@ class _RosaryScreenState extends State<RosaryScreen> {
       body: Center(
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  myIsExpanded = !myIsExpanded;
-                });
-              }, 
-              child: Text('Expand')),
             ExpansionCardList(
               children: [
                 ExpansionCard(
-                  header: Text('Title'),
-                  body: Text('Body'),
-                  isExpanded: myIsExpanded,
+                  header: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text('Title'),
+                  ),
+                  body: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text('Pelo sinal da santa cruz, livrai nos Deus dos nossos inimigos, Em nome do Pai, e do Filho, e do Espirito Santo. Amén.'),
+                  ),
                 ),
                 ExpansionCard(
-                  header: Text('Title'),
-                  body: Text('Body'),
-                  isExpanded: myIsExpanded,
+                  header: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text('Title'),
+                  ),
+                  body: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text('Body'),
+                  ),
+                ),ExpansionCard(
+                  header: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text('Title'),
+                  ),
+                  body: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text('Body'),
+                  ),
+                  isExpanded: false,
+                ),ExpansionCard(
+                  header: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text('Title'),
+                  ),
+                  body: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text('Body'),
+                  ),
                 ),
               ],
             ),
