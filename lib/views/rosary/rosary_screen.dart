@@ -18,54 +18,13 @@ class _RosaryScreenState extends State<RosaryScreen> {
       appBar: AppBar(
         title: Text('Rosary'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            ExpansionCardList(
-              children: [
-                ExpansionCard(
-                  header: Container(
-                    margin: EdgeInsets.only(left: 10),
-                    child: Text('Title'),
-                  ),
-                  body: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Pelo sinal da santa cruz, livrai nos Deus dos nossos inimigos, Em nome do Pai, e do Filho, e do Espirito Santo. Amén.'),
-                  ),
-                ),
-                ExpansionCard(
-                  header: Container(
-                    margin: EdgeInsets.only(left: 10),
-                    child: Text('Title'),
-                  ),
-                  body: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Body'),
-                  ),
-                ),ExpansionCard(
-                  header: Container(
-                    margin: EdgeInsets.only(left: 10),
-                    child: Text('Title'),
-                  ),
-                  body: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Body'),
-                  ),
-                  isExpanded: false,
-                ),ExpansionCard(
-                  header: Container(
-                    margin: EdgeInsets.only(left: 10),
-                    child: Text('Title'),
-                  ),
-                  body: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Body'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+      body: ExpansionCardList(
+        children: [
+          ExpansionCard(title: 'Sinal da Cruz', content: dadosOracoes['Sinal da Cruz'] as String, isInitialyExpanded: true, autoCollapse: false),
+          ExpansionCard(title: 'Oferecimento', content: dadosOracoes['Oferecimento'] as String, isInitialyExpanded: true),
+          ExpansionCard(title: 'Title', content: 'Content'),
+          ExpansionCard(title: 'Title', content: 'Content'),
+        ],
       ),
     );
   }

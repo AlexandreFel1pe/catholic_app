@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ExpansionCard {
-  ExpansionCard({required this.header, required this.body, this.isExpanded = true});
+  ExpansionCard({
+    required this.title,
+    required this.content,
+    this.isInitialyExpanded = false,
+    this.autoCollapse = true})
+    : _isExpanded = isInitialyExpanded;
 
-  final Widget header;
-  final Widget body;
-  bool isExpanded;
+  final String title;
+  final String content;
+  final bool isInitialyExpanded;
+  final bool autoCollapse;
+
+  bool _isExpanded;
 }
 
 class ExpansionCardList extends StatefulWidget {
@@ -25,9 +33,9 @@ class ExpansionCardList extends StatefulWidget {
 class _ExpansionCardListState extends State<ExpansionCardList> {
   void collapseAll(int index) {
     for (int i = 0; i < widget.children.length; i++) {
-        if (i != index) {
+        if (i != index && widget.children[i].autoCollapse == true) {
           setState(() {
-          widget.children[i].isExpanded = false;
+          widget.children[i]._isExpanded = false;
         });
       }
     }
@@ -35,45 +43,76 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (int i = 0; i < widget.children.length; i++)
-          Card(
-            elevation: 2,
-            color: Colors.grey[300],
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () => {
-                    widget.children[i].isExpanded = !widget.children[i].isExpanded,
-                    collapseAll(i),
-          
-                    if (widget.callbackFunction != null) {
-                      widget.callbackFunction
-                    }
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        widget.children[i].header,
-                        Icon(widget.children[i].isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 35),
-                      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          for (int i = 0; i < widget.children.length; i++)
+            Card(
+              elevation: 2,
+              color: Colors.grey[300],
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => {
+                      setState(() {
+                        widget.children[i]._isExpanded = !widget.children[i]._isExpanded;
+                      }),
+
+                      if (widget.children[i].autoCollapse == false && widget.children[i]._isExpanded) {
+                        collapseAll(i),
+                      },
+            
+                      if (widget.callbackFunction != null) {
+                        widget.callbackFunction!(i, widget.children[i]._isExpanded),
+                      },
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            width: 0.1,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ), 
+                      padding: EdgeInsets.all(5),
+                      margin: EdgeInsets.only(left: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black
+                            ),
+                            widget.children[i].title,
+                          ),
+                          Icon(widget.children[i]._isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 35),
+                        ],
+                      ),
+                    )
+                  ),
+                  if (widget.children[i]._isExpanded)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 15,
+                      horizontal: 10
                     ),
-                  )
-                ),
-                if (widget.children[i].isExpanded)
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: widget.children[i].body
-                ),
-              ],
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                      widget.children[i].content,
+                    )
+                  ),
+                ],
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
