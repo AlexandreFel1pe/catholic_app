@@ -7,7 +7,7 @@ import 'package:catholic_app/repositories/biblia_repository.dart';
 import 'package:catholic_app/services/biblia_json_service.dart';
 import 'package:catholic_app/utils/app_routes.dart';
 import 'package:catholic_app/viewmodels/biblia_view_model.dart';
-import 'package:catholic_app/views/rosary/rosary_screen.dart';
+import 'package:catholic_app/views/rosary/screens/rosary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

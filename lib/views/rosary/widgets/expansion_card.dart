@@ -5,13 +5,16 @@ class ExpansionCard {
     required this.title,
     required this.content,
     this.isInitialyExpanded = false,
-    this.autoCollapse = true})
+    this.autoCollapse = true,
+    this.expansionCardList,
+    })
     : _isExpanded = isInitialyExpanded;
 
   final String title;
   final String content;
   final bool isInitialyExpanded;
   final bool autoCollapse;
+  final ExpansionCardList? expansionCardList;
 
   bool _isExpanded;
 }
@@ -31,11 +34,12 @@ class ExpansionCardList extends StatefulWidget {
 }
 
 class _ExpansionCardListState extends State<ExpansionCardList> {
-  void collapseAll(int index) {
+  void collapseAll(int index, bool collapseAll) {
+    print('Collapse all');
     for (int i = 0; i < widget.children.length; i++) {
-        if (i != index && widget.children[i].autoCollapse == true) {
+        if ((i != index && widget.children[i].autoCollapse == true) || (collapseAll == true && i != index)) {
           setState(() {
-          widget.children[i]._isExpanded = false;
+            widget.children[i]._isExpanded = false;
         });
       }
     }
@@ -58,8 +62,12 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                         widget.children[i]._isExpanded = !widget.children[i]._isExpanded;
                       }),
 
-                      if (widget.children[i].autoCollapse == false && widget.children[i]._isExpanded) {
-                        collapseAll(i),
+                      if (widget.children[i].autoCollapse == true && widget.children[i]._isExpanded) {
+                        collapseAll(i, false),
+                      },
+
+                      if (widget.children[i].autoCollapse == false && widget.children[i]._isExpanded == true) {
+                        collapseAll(i, true),
                       },
             
                       if (widget.callbackFunction != null) {
@@ -81,15 +89,17 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black
+                          Flexible(
+                            child: Text(
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black
+                              ),
+                              widget.children[i].title,
                             ),
-                            widget.children[i].title,
                           ),
-                          Icon(widget.children[i]._isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 35),
+                          Flexible(child: Icon(widget.children[i]._isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, size: 35)),
                         ],
                       ),
                     )
@@ -101,12 +111,12 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                       horizontal: 10
                     ),
                     alignment: Alignment.centerLeft,
-                    child: Text(
+                    child: widget.children[i].expansionCardList ?? Text(
                       style: TextStyle(
                         fontSize: 14,
                       ),
                       widget.children[i].content,
-                    )
+                    ),
                   ),
                 ],
               ),
