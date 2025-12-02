@@ -1,6 +1,7 @@
 import 'package:catholic_app/Data/DADOS_ORACOES.dart';
+import 'package:catholic_app/views/widgets/card_body.dart';
+import 'package:catholic_app/views/widgets/card_header.dart';
 import 'package:catholic_app/views/widgets/expansion_card.dart';
-//import 'package:catholic_app/views/rosary/widgets/expansion_card.dart';
 import 'package:flutter/material.dart';
 
 enum Dias { none, segunda, terca, quarta, quinta, sexta, sabado, domingo }
@@ -32,33 +33,76 @@ class _RosaryScreenState extends State<RosaryScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Rosary')),
       body: Center(
-        child: SizedBox(
+        child: Container(
           width: 500,
+          alignment: Alignment.topCenter,
           child: SingleChildScrollView(
             child: ExpansionCardList(
-              autoOpenNextCard: true,
-              autoCollapseOtherCards: true,
               children: [
                 ExpansionCard(
-                  header: Text('Titulo'),
-                  body: 
-                    Text('Conteudo'),
+                  header: CardHeader(
+                    title: 'Sinal da Cruz',
+                    days: 'Segunda e Quinta',
+                    optional: true,
+                  ), 
+                  body: CardBody(
+
+                  ),
                 ),
+
                 ExpansionCard(
-                  autoCollapse: false,
-                  autoOpen: false,
-                  header: Text('Card List'),
-                  body: 
-                    ExpansionCardList(children: [
-                      ExpansionCard(header: Text('data'), body: Text('data')),
-                    ]),
+                  header: CardHeader(
+                    title: 'Sinal da Cruz',
+                    days: 'Segunda e Quinta',
+                    optional: true,
+                  ),
+                  body: ExpansionCardList(
+                    children: [
+                      ExpansionCard(
+                        header: CardHeader(
+                            title: 'Sinal da Cruz',
+                            days: 'Segunda e Quinta',
+                            optional: true,
+                          ), 
+                          body: CardBody(
+
+                        ),
+                      ),
+                      ExpansionCard(
+                        header: CardHeader(
+                            title: 'Sinal da Cruz',
+                            days: 'Segunda e Quinta',
+                            optional: true,
+                          ), 
+                          body: CardBody(
+                            
+                        ),
+                      ),
+                      ExpansionCard(
+                        header: CardHeader(
+                            title: 'Sinal da Cruz',
+                            days: 'Segunda e Quinta',
+                            optional: true,
+                          ), 
+                          body: CardBody(
+                            
+                        ),
+                      ),
+                      ExpansionCard(
+                        header: CardHeader(
+                            title: 'Sinal da Cruz',
+                            days: 'Segunda e Quinta',
+                            optional: true,
+                          ), 
+                          body: CardBody(
+                            
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                ExpansionCard(
-                  header: Text('Titulo'),
-                  body: 
-                    Text('Conteudo'),
-                ),
-              ]),
+              ],
+            ),
           ),
           
           /*ExpansionCardList(

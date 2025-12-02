@@ -16,7 +16,7 @@ class ExpansionCard {
 }
 
 class ExpansionCardList extends StatefulWidget {
-  const ExpansionCardList({required this.children, this.autoOpenNextCard = false, this.autoCollapseOtherCards = true, super.key});
+  const ExpansionCardList({required this.children, this.autoOpenNextCard = true, this.autoCollapseOtherCards = true, super.key});
 
   final List<ExpansionCard> children;
 
@@ -64,29 +64,48 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
       children: [
         for (int i = 0; i < widget.children.length; i++)
         Card(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () => {
-                  if (widget.autoCollapseOtherCards) {
-                    autoCollapseOtherCards(i),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => {
+                    if (widget.autoCollapseOtherCards) {
+                      autoCollapseOtherCards(i),
+                    },
+                            
+                    openOrCloseCard(i),
+                            
+                    if (widget.autoOpenNextCard) {
+                      autoOpenNextCard(i),
+                    }
                   },
-
-                  openOrCloseCard(i),
-
-                  if (widget.autoOpenNextCard) {
-                    autoOpenNextCard(i),
-                  }
-                },
-                behavior: HitTestBehavior.opaque,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: widget.children[i].header,
+                  behavior: HitTestBehavior.opaque,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      spacing: 5,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            child: widget.children[i].header,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 30,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              if (widget.children[i]._isExpanded)
-              widget.children[i].body,
-            ],
+                if (widget.children[i]._isExpanded)
+                widget.children[i].body,
+              ],
+            ),
           ),
         )
       ],
