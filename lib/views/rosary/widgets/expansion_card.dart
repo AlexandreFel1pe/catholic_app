@@ -4,30 +4,50 @@ class ExpansionCard {
   ExpansionCard({
     required this.title,
     required this.content,
-    this.isInitialyExpanded = false,
-    this.autoCollapse = true,
+    this.beadsCounts = 0,
     this.expansionCardList,
+    this.isInitiallyExpanded = false,
+    this.autoCollapse = true,
+    this.titleFontSize,
+    this.contentFontSize,
     })
-    : _isExpanded = isInitialyExpanded;
+    : _isExpanded = isInitiallyExpanded;
 
   final String title;
   final String content;
-  final bool isInitialyExpanded;
-  final bool autoCollapse;
+  final int beadsCounts;
   final ExpansionCardList? expansionCardList;
+  final bool isInitiallyExpanded;
+  final bool autoCollapse;
 
   bool _isExpanded;
+
+  List<Color> beadsColors = List.generate(10, (colors) => const Color.fromRGBO(189, 189, 189, 1));
+
+  // Style
+  final double? titleFontSize;
+  final double? contentFontSize;
 }
 
 class ExpansionCardList extends StatefulWidget {
   const ExpansionCardList({
     this.callbackFunction,
     this.children = const <ExpansionCard>[],
+    this.elevation = 2,
+    this.color = const Color.fromRGBO(224, 224, 224, 1),
+    this.titleFontSize = 16,
+    this.contentFontSize = 14,
     super.key
   });
 
   final List<ExpansionCard> children;
   final void Function(int index, bool isExpanded)? callbackFunction;
+
+  // Style
+  final double elevation;
+  final Color color;
+  final double titleFontSize;
+  final double contentFontSize;
 
   @override
   State<ExpansionCardList> createState() => _ExpansionCardListState();
@@ -35,7 +55,6 @@ class ExpansionCardList extends StatefulWidget {
 
 class _ExpansionCardListState extends State<ExpansionCardList> {
   void collapseAll(int index, bool collapseAll) {
-    print('Collapse all');
     for (int i = 0; i < widget.children.length; i++) {
         if ((i != index && widget.children[i].autoCollapse == true) || (collapseAll == true && i != index)) {
           setState(() {
@@ -52,8 +71,8 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
         children: [
           for (int i = 0; i < widget.children.length; i++)
             Card(
-              elevation: 2,
-              color: Colors.grey[300],
+              elevation: widget.elevation,
+              color: widget.color,
               child: Column(
                 children: [
                   GestureDetector(
@@ -61,11 +80,11 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                       setState(() {
                         widget.children[i]._isExpanded = !widget.children[i]._isExpanded;
                       }),
-
+    
                       if (widget.children[i].autoCollapse == true && widget.children[i]._isExpanded) {
                         collapseAll(i, false),
                       },
-
+    
                       if (widget.children[i].autoCollapse == false && widget.children[i]._isExpanded == true) {
                         collapseAll(i, true),
                       },
@@ -92,7 +111,7 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                           Flexible(
                             child: Text(
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: widget.children[i].titleFontSize ?? widget.titleFontSize,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black
                               ),
@@ -111,12 +130,84 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                       horizontal: 10
                     ),
                     alignment: Alignment.centerLeft,
-                    child: widget.children[i].expansionCardList ?? Text(
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                      widget.children[i].content,
-                    ),
+                    child: Column(
+                      children: [
+                        widget.children[i].expansionCardList ?? Text(
+                          style: TextStyle(
+                            fontSize: widget.children[i].contentFontSize ?? widget.contentFontSize,
+                          ),
+                          widget.children[i].content,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: 20,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 8,
+                            children: [
+                              for (int j = 0; j < widget.children[i].beadsCounts; j++)
+                                GestureDetector(
+                                onTap: () => {
+                                  setState(() {
+                                    if (widget.children[i].beadsColors[j] != const Color.fromRGBO(76, 175, 80, 1)) {
+                                      widget.children[i].beadsColors[j] = const Color.fromRGBO(76, 175, 80, 1);
+
+                                      if (j == widget.children[i].beadsCounts - 1) {
+                                        widget.children[i]._isExpanded = false;
+
+                                        if (i+1 < widget.children.length) {
+                                          if (widget.children[i+1].expansionCardList != null) {
+                                            print('Card List aninhado');
+
+                                            int count = i;
+
+                                            bool childIsNotCardList = false;
+                                            while (!childIsNotCardList) {
+                                              if (widget.children[count+1].expansionCardList == null) {
+                                                childIsNotCardList = true;
+                                                widget.children[count+1]._isExpanded = true;
+                                                print('Não e card list $count');
+                                                break;
+                                              }
+
+                                              count++;
+                                            }
+                                          } else {
+                                            widget.children[i+1]._isExpanded = true;
+                                          }
+                                        }
+                                      }
+
+                                      if (i == widget.children.length - 1) {
+                                        if (j == (widget.children[i].beadsCounts - 1)) {
+                                          //
+                                        }
+                                      }
+                                    } else {
+                                      widget.children[i].beadsColors[j] = const Color.fromRGBO(189, 189, 189, 1);
+                                    }
+                                  }),
+                                },
+                                child: Container(
+                                  width: 25,
+                                  height: 25,
+                                  //color: Colors.grey,
+                                  decoration: BoxDecoration(
+                                    color: widget.children[i].beadsColors[j],
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
                   ),
                 ],
               ),
