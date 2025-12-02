@@ -64,8 +64,75 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
     }
   }
 
+  void openAndCollapseCard(int i) {
+    setState(() {
+      widget.children[i]._isExpanded = !widget.children[i]._isExpanded;
+    });
+    
+    if (widget.children[i].autoCollapse == true && widget.children[i]._isExpanded) {
+      collapseAll(i, false);
+    }
+    
+    if (widget.children[i].autoCollapse == false && widget.children[i]._isExpanded == true) {
+      collapseAll(i, true);
+    }
+            
+    if (widget.callbackFunction != null) {
+      widget.callbackFunction!(i, widget.children[i]._isExpanded);
+    }
+  }
+
+  void goToNextCard(int i, int j) async {
+    if (widget.children[i].beadsColors[j] != const Color.fromRGBO(76, 175, 80, 1)) {
+      setState(() {
+        widget.children[i].beadsColors[j] = const Color.fromRGBO(76, 175, 80, 1);
+      });
+
+      if (j == widget.children[i].beadsCounts - 1) {
+        await Future.delayed(Duration(milliseconds: 150));
+
+        setState(() {
+          widget.children[i]._isExpanded = false;
+        });
+
+        if (i+1 < widget.children.length) {
+          if (widget.children[i+1].expansionCardList != null) {
+            int count = i;
+            bool childIsNotCardList = false;
+            while (!childIsNotCardList) {
+              if (widget.children[count+1].expansionCardList == null) {
+                childIsNotCardList = true;
+                setState(() {
+                  widget.children[count+1]._isExpanded = true;
+                });
+                break;
+              }
+
+              count++;
+            }
+          } else {
+            setState(() {
+              widget.children[i+1]._isExpanded = true;
+            });
+          }
+        }
+      }
+
+      if (i == widget.children.length - 1) {
+        if (j == (widget.children[i].beadsCounts - 1)) {
+          //
+        }
+      }
+    } else {
+      setState(() {
+        widget.children[i].beadsColors[j] = const Color.fromRGBO(189, 189, 189, 1);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -77,21 +144,7 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                 children: [
                   GestureDetector(
                     onTap: () => {
-                      setState(() {
-                        widget.children[i]._isExpanded = !widget.children[i]._isExpanded;
-                      }),
-    
-                      if (widget.children[i].autoCollapse == true && widget.children[i]._isExpanded) {
-                        collapseAll(i, false),
-                      },
-    
-                      if (widget.children[i].autoCollapse == false && widget.children[i]._isExpanded == true) {
-                        collapseAll(i, true),
-                      },
-            
-                      if (widget.callbackFunction != null) {
-                        widget.callbackFunction!(i, widget.children[i]._isExpanded),
-                      },
+                      openAndCollapseCard(i),
                     },
                     behavior: HitTestBehavior.opaque,
                     child: Container(
@@ -147,59 +200,23 @@ class _ExpansionCardListState extends State<ExpansionCardList> {
                             spacing: 8,
                             children: [
                               for (int j = 0; j < widget.children[i].beadsCounts; j++)
-                                GestureDetector(
-                                onTap: () => {
-                                  setState(() {
-                                    if (widget.children[i].beadsColors[j] != const Color.fromRGBO(76, 175, 80, 1)) {
-                                      widget.children[i].beadsColors[j] = const Color.fromRGBO(76, 175, 80, 1);
-
-                                      if (j == widget.children[i].beadsCounts - 1) {
-                                        widget.children[i]._isExpanded = false;
-
-                                        if (i+1 < widget.children.length) {
-                                          if (widget.children[i+1].expansionCardList != null) {
-                                            print('Card List aninhado');
-
-                                            int count = i;
-
-                                            bool childIsNotCardList = false;
-                                            while (!childIsNotCardList) {
-                                              if (widget.children[count+1].expansionCardList == null) {
-                                                childIsNotCardList = true;
-                                                widget.children[count+1]._isExpanded = true;
-                                                print('Não e card list $count');
-                                                break;
-                                              }
-
-                                              count++;
-                                            }
-                                          } else {
-                                            widget.children[i+1]._isExpanded = true;
-                                          }
-                                        }
-                                      }
-
-                                      if (i == widget.children.length - 1) {
-                                        if (j == (widget.children[i].beadsCounts - 1)) {
-                                          //
-                                        }
-                                      }
-                                    } else {
-                                      widget.children[i].beadsColors[j] = const Color.fromRGBO(189, 189, 189, 1);
-                                    }
-                                  }),
-                                },
-                                child: Container(
-                                  width: 25,
-                                  height: 25,
-                                  //color: Colors.grey,
-                                  decoration: BoxDecoration(
-                                    color: widget.children[i].beadsColors[j],
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1.5,
+                                Flexible(
+                                  child: GestureDetector(
+                                  onTap: () => {
+                                    goToNextCard(i, j),
+                                  },
+                                  child: Container(
+                                    width: mediaQuery.size.width > 360 ? 25 : 20,
+                                    height: mediaQuery.size.width > 360 ? 25 : 20,
+                                    //color: Colors.grey,
+                                    decoration: BoxDecoration(
+                                      color: widget.children[i].beadsColors[j],
+                                      border: Border.all(
+                                        color: Colors.black,
+                                        width: 1.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(100),
                                     ),
-                                    borderRadius: BorderRadius.circular(100),
                                   ),
                                 ),
                               ),
