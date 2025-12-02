@@ -1,5 +1,6 @@
 import 'package:catholic_app/Data/DADOS_ORACOES.dart';
-import 'package:catholic_app/views/rosary/widgets/expansion_card.dart';
+import 'package:catholic_app/views/widgets/expansion_card.dart';
+//import 'package:catholic_app/views/rosary/widgets/expansion_card.dart';
 import 'package:flutter/material.dart';
 
 enum Dias { none, segunda, terca, quarta, quinta, sexta, sabado, domingo }
@@ -31,9 +32,36 @@ class _RosaryScreenState extends State<RosaryScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Rosary')),
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 500,
-          child: ExpansionCardList(
+          child: SingleChildScrollView(
+            child: ExpansionCardList(
+              autoOpenNextCard: true,
+              autoCollapseOtherCards: true,
+              children: [
+                ExpansionCard(
+                  header: Text('Titulo'),
+                  body: 
+                    Text('Conteudo'),
+                ),
+                ExpansionCard(
+                  autoCollapse: false,
+                  autoOpen: false,
+                  header: Text('Card List'),
+                  body: 
+                    ExpansionCardList(children: [
+                      ExpansionCard(header: Text('data'), body: Text('data')),
+                    ]),
+                ),
+                ExpansionCard(
+                  header: Text('Titulo'),
+                  body: 
+                    Text('Conteudo'),
+                ),
+              ]),
+          ),
+          
+          /*ExpansionCardList(
             children: [
               ExpansionCard(
                 title: 'Sinal da Cruz',
@@ -155,7 +183,7 @@ class _RosaryScreenState extends State<RosaryScreen> {
                 beadsCounts: 1,
               ),
             ],
-          ),
+          ),*/
         ),
       ),
     );
